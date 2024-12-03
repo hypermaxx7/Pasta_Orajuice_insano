@@ -281,6 +281,7 @@ class Application:
             # Cria um Label no frameLogo para exibir a imagem
             self.label_profile = Label(self.frame2, image=self.logo_profile, highlightbackground="Black", highlightthickness=3)
             self.label_profile.place(relx=0.2, rely=0.4, anchor="center")  # Centraliza a imagem dentro do frameLogo
+            
         except Exception as e:
             print(f"Erro ao carregar a imagem: {e}")
             messagebox.showerror("Erro", "Não foi possível carregar a imagem do logo.")
@@ -310,17 +311,69 @@ class Application:
         
     def mostrar_navegacao(self):
         self.limpar_frame2()
-        Label(self.frame2, text="Navegação", bg="White", font=("Arial", 16)).place(relx=0,rely=0)
-        Search = Entry(self.frame2, font=("Arial", 14))
-        Search.place(relx=0,rely=0.1)
-        Button(self.frame2, text="Buscar", font=("Arial", 14), bg="#FF914B", cursor="hand2").place(relx=0, rely=0.2)
-        Button(self.frame2, text="Limpar", font=("Arial", 14), bg="#FF914B", cursor="hand2").place(relx=0.1, rely=0.2)
+    def mostrar_navegacao(self):
+        """Função que cria a interface de navegação com pesquisa e botões de jogos."""
+        self.limpar_frame2()
+
+        # Lista de jogos
+        self.jogos = ["Half-Life 2", "Halo", "Dark Souls", "Resident Evil"]
+
+        # Título da seção
+        tk.Label(self.frame2, text="Navegação", bg="White", font=("Arial", 16)).grid(row=0, column=0, columnspan=3, pady=10)
+
+        # Campo de pesquisa
+        self.Search = tk.Entry(self.frame2, font=("Arial", 14))
+        self.Search.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
+
+        # Botão de buscar
+        tk.Button(self.frame2, text="Buscar", font=("Arial", 14), bg="#FF914B", cursor="hand2", command=self.buscar_jogos).grid(row=1, column=2, padx=10)
+
+        # Botão de limpar
+        tk.Button(self.frame2, text="Limpar", font=("Arial", 14), bg="#FF914B", cursor="hand2", command=self.limpar_pesquisa).grid(row=2, column=0, columnspan=3, pady=10)
+
+        # Exibe os botões de jogos na tela inicial (abaixo dos botões "Buscar" e "Limpar")
+        self.exibir_botoes(self.jogos)
+
+    def limpar_frame2(self):
+        """Limpa o conteúdo da frame2."""
+        for widget in self.frame2.winfo_children():
+            widget.grid_forget()
+
+    def buscar_jogos(self):
+        """Filtra os jogos e exibe botões correspondentes aos jogos encontrados."""
+        termo_busca = self.Search.get().lower()
+        jogos_filtrados = [jogo for jogo in self.jogos if termo_busca in jogo.lower()]
+
+        # Exibe os botões dos jogos filtrados
+        self.exibir_botoes(jogos_filtrados)
+
+    def limpar_pesquisa(self):
+        """Limpa o campo de pesquisa e exibe todos os jogos."""
+        self.Search.delete(0, tk.END)
+        self.exibir_botoes(self.jogos)
+
+    def exibir_botoes(self, jogos):
+        """Exibe os botões dos jogos passados por parâmetro em fileiras organizadas."""
+        row = 3  # Começa na linha 3 para exibir os botões dos jogos abaixo dos outros botões
+        col = 0  # Começa na primeira coluna da grid
+
+        # Limpa a área de exibição dos botões
+        for widget in self.frame2.winfo_children():
+            if isinstance(widget, tk.Button) and widget != self.Search:
+                widget.grid_forget()
+
+        # Exibe os botões dos jogos
+        for i, jogo in enumerate(jogos):
+            tk.Button(self.frame2, text=jogo, font=("Arial", 12), bg="#FF914B", cursor="hand2").grid(row=row, column=col, padx=5, pady=5)
+            col += 1
+            if col > 2:  # Limita 3 botões por linha
+                col = 0
+                row += 1
 
     def mostrar_biblioteca(self):
         self.limpar_frame2()
         Label(self.frame2, text="Sua biblioteca", bg="White", font=("Arial", 16)).pack(pady=10)
         Label(self.frame2, text="Você ainda não adquiriu nenhum de nossos produtos.", font=("Arial", 12), fg="blue", bg="White").pack(pady=10)
-
 
     def sair(self):
         if messagebox.askyesno("Confirmação", "Tem certeza que quer sair?"):
