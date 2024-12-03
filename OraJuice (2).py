@@ -319,25 +319,25 @@ class Application:
         self.jogos = ["Half-Life 2", "Halo", "Dark Souls", "Resident Evil"]
 
         # Título da seção
-        tk.Label(self.frame2, text="Navegação", bg="White", font=("Arial", 16)).grid(row=0, column=0, columnspan=3, pady=10)
+        tk.Label(self.frame2, text="Navegação", bg="White", font=("Arial", 16)).place(relx=0, rely=0)
 
         # Campo de pesquisa
         self.Search = tk.Entry(self.frame2, font=("Arial", 14))
-        self.Search.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
+        self.Search.place(relx=0, rely=0.1)
 
         # Botão de buscar
-        tk.Button(self.frame2, text="Buscar", font=("Arial", 14), bg="#FF914B", cursor="hand2", command=self.buscar_jogos).grid(row=1, column=2, padx=10)
+        tk.Button(self.frame2, text="Buscar", font=("Arial", 14), bg="#FF914B", cursor="hand2", command=self.buscar_jogos).place(relx=0.3, rely=0.1)
 
         # Botão de limpar
-        tk.Button(self.frame2, text="Limpar", font=("Arial", 14), bg="#FF914B", cursor="hand2", command=self.limpar_pesquisa).grid(row=2, column=0, columnspan=3, pady=10)
+        tk.Button(self.frame2, text="Limpar", font=("Arial", 14), bg="#FF914B", cursor="hand2", command=self.limpar_pesquisa).place(relx=0.4, rely=0.1)
 
-        # Exibe os botões de jogos na tela inicial (abaixo dos botões "Buscar" e "Limpar")
+        # Exibe os botões de jogos na tela inicial
         self.exibir_botoes(self.jogos)
 
     def limpar_frame2(self):
         """Limpa o conteúdo da frame2."""
         for widget in self.frame2.winfo_children():
-            widget.grid_forget()
+            widget.destroy()
 
     def buscar_jogos(self):
         """Filtra os jogos e exibe botões correspondentes aos jogos encontrados."""
@@ -354,21 +354,22 @@ class Application:
 
     def exibir_botoes(self, jogos):
         """Exibe os botões dos jogos passados por parâmetro em fileiras organizadas."""
-        row = 3  # Começa na linha 3 para exibir os botões dos jogos abaixo dos outros botões
+        row = 1  # Começa na primeira linha da grid
         col = 0  # Começa na primeira coluna da grid
 
         # Limpa a área de exibição dos botões
         for widget in self.frame2.winfo_children():
-            if isinstance(widget, tk.Button) and widget != self.Search:
+            if isinstance(widget, tk.Button):
                 widget.grid_forget()
 
         # Exibe os botões dos jogos
         for i, jogo in enumerate(jogos):
             tk.Button(self.frame2, text=jogo, font=("Arial", 12), bg="#FF914B", cursor="hand2").grid(row=row, column=col, padx=5, pady=5)
             col += 1
-            if col > 2:  # Limita 3 botões por linha
+            if col > 6:  # Limita 3 botões por linha
                 col = 0
                 row += 1
+
 
     def mostrar_biblioteca(self):
         self.limpar_frame2()
