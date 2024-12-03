@@ -333,6 +333,19 @@ class Application:
 
         # Exibe os botões de jogos na tela inicial (abaixo dos botões "Buscar" e "Limpar")
         self.exibir_botoes(self.jogos)
+    def mostrar_jogo(self,nome):
+        """Função que cria a interface de navegação com pesquisa e botões de jogos."""
+        self.limpar_frame2()
+        titulo = Label(text=nome,font=("Helvetica", 50, "bold"))
+        titulo.place(x=300,y=150)
+        descricao = Label(text="um jogo qualquer")
+        descricao.place(x=70,y=250)          
+        detalhes = ["1998","core i7","rtx"]
+        for x,y in enumerate(detalhes):
+            detalhe = Label(text =y)
+            detalhe.place(x=600,y=250+(x*20))   
+        
+
 
     def limpar_frame2(self):
         """Limpa o conteúdo da frame2."""
@@ -364,7 +377,7 @@ class Application:
 
         # Exibe os botões dos jogos
         for i, jogo in enumerate(jogos):
-            tk.Button(self.frame2, text=jogo, font=("Arial", 12), bg="#FF914B", cursor="hand2").grid(row=row, column=col, padx=5, pady=5)
+            tk.Button(self.frame2, text=jogo, font=("Arial", 12), bg="#FF914B", cursor="hand2",command=lambda jogo=jogo:self.mostrar_jogo(jogo)).grid(row=row, column=col, padx=5, pady=5)
             col += 1
             if col > 2:  # Limita 3 botões por linha
                 col = 0
