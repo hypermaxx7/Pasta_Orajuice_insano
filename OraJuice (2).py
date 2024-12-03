@@ -8,6 +8,7 @@ import pytz
 import sqlite3
 import json
 import os
+from extrair import extrair
 
 # Banco de dados
 def conectar_bd():
@@ -344,6 +345,9 @@ class Application:
         for x,y in enumerate(detalhes):
             detalhe = Label(text =y)
             detalhe.place(x=600,y=250+(x*20))   
+        os.makedirs(nome, exist_ok=True)
+        botao = Button(text="download",command=lambda:extrair("games/brutalv21.zip","saida/"+nome))
+        botao.place(x=600,y=400)
         
 
 
