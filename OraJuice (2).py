@@ -380,30 +380,46 @@ class Application:
         self.limpar_frame2()
         #gamescreen = Frame(self.window, bd=4, bg="White", highlightbackground="Black", highlightthickness=3)
         #gamescreen.place(relx=0.03, rely=0.24, relwidth=0.98, relheight=0.78)
-        # Função que cria a interface de navegação com pesquisa e botões de jogos
-        lista_de_jogos={
-            "teste1":["aqui é a descrição, ela é assim mesmo, faze oq","requisitos minimos: 8gb i5 RTX Geforce"],
-            "teste2":["aqui é a descrição do teste2, ela é assim mesmo, faze oq","requisitos minimos: 8gb i5 RTX Geforce"],
-            "wads":["aqui é a descrição dos wads, ela é assim mesmo, faze oq","requisitos minimos: 8gb i5 RTX Geforce"],
-            "Orange-Juice-main":["aqui é a descrição do Orange-Juice-main, ela é assim mesmo, faze oq","requisitos minimos: 8gb i5 RTX Geforce"],
-            "gzdoom-4-13-2-windows":["aqui é a descrição do gzdoom-4-13-2-windows, ela é assim mesmo, faze oq","requisitos minimos: 8gb i5 RTX Geforce"],
-            "brutalv21":["aqui é a descrição do brutalv21, ela é assim mesmo, faze oq","requisitos minimos: 8gb i5 RTX Geforce"],
-        }
+        conexao = sqlite3.connect('Game.db')
+        cursor = conexao.cursor()
+        cursor.execute("SELECT requisitos FROM Game WHERE Nome = ?", (nome,))
+        resultado1 = cursor.fetchone()
+        if resultado1:
+            requisitos = resultado1[0]
+            print(f"Requisitos do Jogo: {requisitos}")
+        else:
+            print("Usuário não encontrado.")
+        
+        cursor.execute("SELECT descrição FROM Game WHERE Nome = ?", (nome,))
+        resultado2 = cursor.fetchone()
+        if resultado2:
+            descricao = resultado2[0]
+            print(f"Descrição do Jogo: {descricao}")
+        else:
+            print("Usuário não encontrado.")
+        
+        cursor.execute("SELECT Dir FROM Game WHERE Nome = ?", (nome,))
+        resultado3 = cursor.fetchone()
+        if resultado3:
+            Dir = resultado3[0]
+            print(f"Descrição do Jogo: {Dir}")
+        else:
+            print("Usuário não encontrado.")
+
         self.limpar_frame2()
         titulo = Label(self.frame2, text=nome,font=("Helvetica", 50, "bold"))
         titulo.place(x=150,y=100)
-        desc = Label(self.frame2, text =lista_de_jogos[nome][0])
+        desc = Label(self.frame2, text =descricao)
         desc.place(x=100,y=250)
 
-        detalhes = ["1998","core i7","rtx"]
-        for x,y in enumerate(lista_de_jogos[nome][1].split()):
+        for x,y in enumerate(requisitos.split()):
 
             detalhe = Label(self.frame2, text =y)
             detalhe.place(x=600,y=250+(x*20))
         os.makedirs(nome, exist_ok=True)
 
         #Cria os botões de dowload e salvar
-        botao = Button(self.frame2, text="download",command=lambda:extrair("games/brutalv21.zip","saida/"+nome))
+        botao = Button(self.frame2, text="download",command=lambda:extrair(Dir,"saida/"+nome))
         botao_save = Button(self.frame2, text="Salvar na biblioteca", command=self.savegame)
         botao.place(x=520,y=400)
         botao_save.place(x= 600, y=400)
