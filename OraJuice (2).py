@@ -4,7 +4,6 @@ from tkinter import messagebox
 from PIL import Image
 from PIL import ImageTk
 from datetime import datetime
-import pytz
 import sqlite3
 import json
 import os
