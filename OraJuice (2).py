@@ -427,6 +427,7 @@ class Application:
         mygames = Criar_Banco("mygames","mygames")
         mygames.insert_table([nome,"daniel"])
         messagebox.showinfo("Sucesso", "Jogo está salvo na sua biblioteca!")
+        
      
 def inicializar():
         usuario_logado = carregar_usuario_logado()

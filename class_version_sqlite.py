@@ -22,6 +22,15 @@ class Criar_Banco:
         self.cursor.execute(query, valores)
         self.banco.commit()
 
+    def take_value(self,nomedobanco,id,atributo): 
+        self.cursor.execute("SELECT "+atributo+" FROM "+nomedobanco+" WHERE ID = ?", (id,))
+        resultado = self.cursor.fetchone()
+        if resultado:
+            res = resultado[0]
+            return res
+        else:
+            print("atributo não encontrado.")
+        
     def get_columns(self):
         """Retorna os nomes das colunas da tabela."""
         self.cursor.execute(f"PRAGMA table_info({self.nome})")

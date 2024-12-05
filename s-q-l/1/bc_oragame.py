@@ -75,7 +75,7 @@ at_game = [
 
 Game.create_table(at_game)
 
-Game.insert_table(["teste1","8gb RTX I5","esse é o exemplo de descrição do jogo","C:/Users/samuel_r_raulino/Documents/GitHub/Pasta_Orajuice_insano/games/teste1.zip"])
+Game.insert_table(["teste2","8gb RTX I5","esse é o exemplo de descrição do jogo","C:/Users/samuel_r_raulino/Documents/GitHub/Pasta_Orajuice_insano/games/teste2.zip"])
 
 
 Game.show_table()
