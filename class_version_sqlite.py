@@ -22,8 +22,8 @@ class Criar_Banco:
         self.cursor.execute(query, valores)
         self.banco.commit()
 
-    def take_value(self,nomedobanco,id,atributo): 
-        self.cursor.execute("SELECT "+atributo+" FROM "+nomedobanco+" WHERE ID = ?", (id,))
+    def take_value(self, nomedobanco, id, atributo): 
+        self.cursor.execute("SELECT " + atributo + " FROM " + nomedobanco + " WHERE ID = ?", (id,))
         resultado = self.cursor.fetchone()
         if resultado:
             res = resultado[0]
@@ -59,3 +59,8 @@ class Criar_Banco:
         for registro in registros:
             print(registro)
 
+    def get_all_ids(self):
+        """Retorna todos os IDs da tabela como uma lista."""
+        self.cursor.execute(f"SELECT ID FROM {self.nome}")
+        ids = [row[0] for row in self.cursor.fetchall()]
+        return ids

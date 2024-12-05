@@ -337,7 +337,7 @@ class Application:
         tk.Button(self.frame2, text="Limpar", font=("Arial", 14), bg="#FF914B", cursor="hand2", command=self.limpar_pesquisa).place(relx=0.4, rely=0.1)
 
         # Exibe os botões de jogos na tela inicial
-        self.exibir_botoes(arquivos = listar_arquivos("games"))
+        self.exibir_botoes(listar_arquivos("games"),True)
 
     def limpar_frame2(self):
         for widget in self.frame2.winfo_children():
@@ -357,15 +357,27 @@ class Application:
         self.Search.delete(0, tk.END)
         self.exibir_botoes(self.jogos)
 
-    def exibir_botoes(self, arquivos):
+    def exibir_botoes(self, arquivos,remover):
+        
         for xx,arquivo in enumerate(arquivos):
-            dir = "saida/" + remover_ultimos_caracteres(arquivo, 4)
-            os.makedirs(dir, exist_ok=True)
-            bot = tk.Button(self.frame2,text=remover_ultimos_caracteres(arquivo, 4),command=lambda arquivo=arquivo:self.mostrar_jogo(remover_ultimos_caracteres(arquivo, 4)))
-            bot.place(x = 100+xx*70,y=300)
+            if remover == True:
+                dir = "saida/" + remover_ultimos_caracteres(arquivo, 4)
+                os.makedirs(dir, exist_ok=True)
+                bot = tk.Button(self.frame2,text=remover_ultimos_caracteres(arquivo, 4),command=lambda arquivo=arquivo:self.mostrar_jogo(remover_ultimos_caracteres(arquivo, 4)))
+                bot.place(x = 100+xx*70,y=300)
+            if remover == False:
+                print(arquivo)
+                bot = tk.Button(self.frame2,text=arquivo,command=lambda arquivo=arquivo:self.mostrar_jogo(arquivo))
+                bot.place(x = 100+xx*70,y=300)
 
     def mostrar_biblioteca(self):
-        arquivos = listar_arquivos("games")
+        self.limpar_frame2()
+        arquivos = []
+        mygames = Criar_Banco("mygames","mygames")
+        for x in mygames.get_all_ids():
+            arquivo = mygames.take_value("mygames",x,"Nome")
+            arquivos.append(arquivo)
+            self.exibir_botoes(arquivos,False)
         """
         self.limpar_frame2()
         Label(self.frame2, text="Sua biblioteca", bg="White", font=("Arial", 16)).pack(pady=10)
