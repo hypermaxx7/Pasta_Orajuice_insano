@@ -9,7 +9,8 @@ import sqlite3
 import json
 import os
 from extrair import extrair
-
+from listar_jogos import listar_arquivos 
+from remover_str import remover_ultimos_caracteres
 # Banco de dados
 def conectar_bd():
     conn = sqlite3.connect('usuarios.db')
@@ -253,6 +254,8 @@ class Application:
         self.frame2 = Frame(self.window, bd=4, bg="White", highlightbackground="Black", highlightthickness=3)
         self.frame2.place(relx=0.01, rely=0.21, relwidth=0.98, relheight=0.78)
 
+        
+
     def widgets(self):
         # Botões de navegação
         Button(self.opitions, text="Conta", font=("Arial", 14), bg="#FF914B", command=self.mostrar_conta).place(relx=0, rely=0, relwidth=0.2, relheight=1)
@@ -266,7 +269,6 @@ class Application:
 
         # Conteúdo inicial no frame2
         Label(self.frame2, text="Bem vindo(a) ao site oficial da Orange Juice!", bg="White", font=("Arial", 14)).place(relx=0.3, rely=0.025)
-
 
     def mostrar_conta(self):
         self.limpar_frame2()
@@ -294,7 +296,7 @@ class Application:
         self.logo_config = ImageTk.PhotoImage(self.image)  # Converte a imagem para formato Tkinter
 
         # Cria um Label no frameLogo para exibir a imagem
-        self.label_config = Button(self.frame2, image=self.logo_config, cursor="hand2")
+        self.label_config = Button(self.frame2, image=self.logo_config, cursor="hand2", command=self.mostrar_config)
         self.label_config.place(relx=0.03, rely=0.95, anchor="center")  # Centraliza a imagem dentro do frameLogo
 
         # NOME DO USUÁRIO APARECENDO NA TELA USUÁRIO
@@ -312,12 +314,14 @@ class Application:
         
     def mostrar_navegacao(self):
         self.limpar_frame2()
+          
     def mostrar_navegacao(self):
-        """Função que cria a interface de navegação com pesquisa e botões de jogos."""
+        #Função que cria a interface de navegação com pesquisa e botões de jogos
         self.limpar_frame2()
 
         # Lista de jogos
-        self.jogos = ["Half-Life 2", "Halo", "Dark Souls", "Resident Evil"]
+        self.jogos = ["Half Life 2", "Halo", "Dark Souls", "Resident Evil"]
+        self.saved_games = [""]
 
         # Título da seção
         tk.Label(self.frame2, text="Navegação", bg="White", font=("Arial", 16)).place(relx=0, rely=0)
@@ -334,30 +338,14 @@ class Application:
 
         # Exibe os botões de jogos na tela inicial
         self.exibir_botoes(self.jogos)
-    def mostrar_jogo(self,nome):
-        """Função que cria a interface de navegação com pesquisa e botões de jogos."""
-        self.limpar_frame2()
-        titulo = Label(text=nome,font=("Helvetica", 50, "bold"))
-        titulo.place(x=300,y=150)
-        descricao = Label(text="um jogo qualquer")
-        descricao.place(x=70,y=250)          
-        detalhes = ["1998","core i7","rtx"]
-        for x,y in enumerate(detalhes):
-            detalhe = Label(text =y)
-            detalhe.place(x=600,y=250+(x*20))   
-        os.makedirs(nome, exist_ok=True)
-        botao = Button(text="download",command=lambda:extrair("games/brutalv21.zip","saida/"+nome))
-        botao.place(x=600,y=400)
-        
-
 
     def limpar_frame2(self):
-        """Limpa o conteúdo da frame2."""
         for widget in self.frame2.winfo_children():
             widget.destroy()
+        
 
     def buscar_jogos(self):
-        """Filtra os jogos e exibe botões correspondentes aos jogos encontrados."""
+        #Filtra os jogos e exibe botões correspondentes aos jogos encontrados
         termo_busca = self.Search.get().lower()
         jogos_filtrados = [jogo for jogo in self.jogos if termo_busca in jogo.lower()]
 
@@ -365,28 +353,17 @@ class Application:
         self.exibir_botoes(jogos_filtrados)
 
     def limpar_pesquisa(self):
-        """Limpa o campo de pesquisa e exibe todos os jogos."""
+        #Limpa o campo de pesquisa e exibe todos os jogos.
         self.Search.delete(0, tk.END)
         self.exibir_botoes(self.jogos)
 
     def exibir_botoes(self, jogos):
-        """Exibe os botões dos jogos passados por parâmetro em fileiras organizadas."""
-        row = 1  # Começa na primeira linha da grid
-        col = 0  # Começa na primeira coluna da grid
-
-        # Limpa a área de exibição dos botões
-        for widget in self.frame2.winfo_children():
-            if isinstance(widget, tk.Button):
-                widget.grid_forget()
-
-        # Exibe os botões dos jogos
-        for i, jogo in enumerate(jogos):
-            tk.Button(self.frame2, text=jogo, font=("Arial", 12), bg="#FF914B", cursor="hand2",command=lambda jogo=jogo:self.mostrar_jogo(jogo)).grid(row=row, column=col, padx=5, pady=5)
-            col += 1
-            if col > 6:  # Limita 3 botões por linha
-                col = 0
-                row += 1
-
+        arquivos = listar_arquivos("games")
+        for xx,arquivo in enumerate(arquivos):
+            dir = "saida/" + remover_ultimos_caracteres(arquivo, 4)
+            os.makedirs(dir, exist_ok=True)
+            bot = tk.Button(self.frame2,text=remover_ultimos_caracteres(arquivo, 4),command=lambda arquivo=arquivo:self.mostrar_jogo(remover_ultimos_caracteres(arquivo, 4)))
+            bot.place(x = 100+xx*70,y=300)
 
     def mostrar_biblioteca(self):
         self.limpar_frame2()
@@ -397,20 +374,52 @@ class Application:
         if messagebox.askyesno("Confirmação", "Tem certeza que quer sair?"):
             limpar_usuario_logado()
             self.window.destroy()
-            inicializar()
-  
-    def limpar_frame2(self):
-        for widget in self.frame2.winfo_children():
-            widget.destroy()
+            inicializar() 
 
-# Inicialização
+    def mostrar_jogo(self,nome):
+        
+        self.limpar_frame2()
+        #gamescreen = Frame(self.window, bd=4, bg="White", highlightbackground="Black", highlightthickness=3)
+        #gamescreen.place(relx=0.03, rely=0.24, relwidth=0.98, relheight=0.78)
+        # Função que cria a interface de navegação com pesquisa e botões de jogos
+        lista_de_jogos={
+            "teste1":["aqui é a descrição, ela é assim mesmo, faze oq","requisitos minimos: 8gb i5 RTX Geforce"],
+            "teste2":["aqui é a descrição do teste2, ela é assim mesmo, faze oq","requisitos minimos: 8gb i5 RTX Geforce"],
+            "wads":["aqui é a descrição dos wads, ela é assim mesmo, faze oq","requisitos minimos: 8gb i5 RTX Geforce"],
+            "Orange-Juice-main":["aqui é a descrição do Orange-Juice-main, ela é assim mesmo, faze oq","requisitos minimos: 8gb i5 RTX Geforce"],
+            "gzdoom-4-13-2-windows":["aqui é a descrição do gzdoom-4-13-2-windows, ela é assim mesmo, faze oq","requisitos minimos: 8gb i5 RTX Geforce"],
+            "brutalv21":["aqui é a descrição do brutalv21, ela é assim mesmo, faze oq","requisitos minimos: 8gb i5 RTX Geforce"],
+        }
+        self.limpar_frame2()
+        titulo = Label(self.frame2, text=nome,font=("Helvetica", 50, "bold"))
+        titulo.place(x=150,y=100)
+        desc = Label(self.frame2, text =lista_de_jogos[nome][0])
+        desc.place(x=100,y=250)
+
+        detalhes = ["1998","core i7","rtx"]
+        for x,y in enumerate(lista_de_jogos[nome][1].split()):
+
+            detalhe = Label(self.frame2, text =y)
+            detalhe.place(x=600,y=250+(x*20))
+        os.makedirs(nome, exist_ok=True)
+
+        #Cria os botões de dowload e salvar
+        botao = Button(self.frame2, text="download",command=lambda:extrair("games/brutalv21.zip","saida/"+nome))
+        botao_save = Button(self.frame2, text="Salvar na biblioteca", command=self.savegame)
+        botao.place(x=520,y=400)
+        botao_save.place(x= 600, y=400)
+    
+    def savegame():
+        messagebox.showinfo("Sucesso", "Jogo está salvo na sua biblioteca!")
+     
 def inicializar():
-    usuario_logado = carregar_usuario_logado()
-    if usuario_logado:
-        Application(usuario_logado)
-    else:
-        root = Tk()
-        LoginCadastro(root, ao_logar=lambda usuario: (root.destroy(), Application(usuario)))
-        root.mainloop()
+        usuario_logado = carregar_usuario_logado()
+        if usuario_logado:
+            Application(usuario_logado)
+        else:
+            root = Tk()
+            LoginCadastro(root, ao_logar=lambda usuario: (root.destroy(), Application(usuario)))
+            root.mainloop()   
 
+#Inicia tudo (tipo um genesis do sistema)
 inicializar()
