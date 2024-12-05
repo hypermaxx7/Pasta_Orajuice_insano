@@ -431,8 +431,19 @@ class Application:
         os.makedirs(nome, exist_ok=True)
 
         #Cria os botões de dowload e salvar
+        arquivos = []
         botao = Button(self.frame2, text="download",command=lambda:extrair(Dir,"saida/"+nome))
-        botao_save = Button(self.frame2, text="Salvar na biblioteca", command=lambda: self.savegame(nome))
+        mygames = Criar_Banco("mygames","mygames")
+        tenho = False
+        #fazer o botao mudar de salvar para jogar
+        for x in mygames.get_all_ids():
+            if x == nome:
+                tenho = True
+        if tenho:
+            botao_save = Button(self.frame2, text="Jogar", command=lambda: self.savegame(nome))
+        else:
+            botao_save = Button(self.frame2, text="Salvar na biblioteca", command=lambda: self.savegame(nome))
+        
         botao.place(x=520,y=400)
         botao_save.place(x= 600, y=400)
     
