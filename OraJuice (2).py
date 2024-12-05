@@ -337,7 +337,7 @@ class Application:
         tk.Button(self.frame2, text="Limpar", font=("Arial", 14), bg="#FF914B", cursor="hand2", command=self.limpar_pesquisa).place(relx=0.4, rely=0.1)
 
         # Exibe os botões de jogos na tela inicial
-        self.exibir_botoes(self.jogos)
+        self.exibir_botoes(arquivos = listar_arquivos("games"))
 
     def limpar_frame2(self):
         for widget in self.frame2.winfo_children():
@@ -357,8 +357,7 @@ class Application:
         self.Search.delete(0, tk.END)
         self.exibir_botoes(self.jogos)
 
-    def exibir_botoes(self, jogos):
-        arquivos = listar_arquivos("games")
+    def exibir_botoes(self, arquivos):
         for xx,arquivo in enumerate(arquivos):
             dir = "saida/" + remover_ultimos_caracteres(arquivo, 4)
             os.makedirs(dir, exist_ok=True)
@@ -366,9 +365,11 @@ class Application:
             bot.place(x = 100+xx*70,y=300)
 
     def mostrar_biblioteca(self):
+        arquivos = listar_arquivos("games")
+        """
         self.limpar_frame2()
         Label(self.frame2, text="Sua biblioteca", bg="White", font=("Arial", 16)).pack(pady=10)
-        Label(self.frame2, text="Você ainda não adquiriu nenhum de nossos produtos.", font=("Arial", 12), fg="blue", bg="White").pack(pady=10)
+        Label(self.frame2, text="Você ainda não adquiriu nenhum de nossos produtos.", font=("Arial", 12), fg="blue", bg="White").pack(pady=10)"""
 
     def sair(self):
         if messagebox.askyesno("Confirmação", "Tem certeza que quer sair?"):
