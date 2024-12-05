@@ -10,6 +10,7 @@ import os
 from extrair import extrair
 from listar_jogos import listar_arquivos 
 from remover_str import remover_ultimos_caracteres
+from class_version_sqlite import *
 # Banco de dados
 def conectar_bd():
     conn = sqlite3.connect('usuarios.db')
@@ -376,7 +377,6 @@ class Application:
             inicializar() 
 
     def mostrar_jogo(self,nome):
-        
         self.limpar_frame2()
         #gamescreen = Frame(self.window, bd=4, bg="White", highlightbackground="Black", highlightthickness=3)
         #gamescreen.place(relx=0.03, rely=0.24, relwidth=0.98, relheight=0.78)
@@ -397,7 +397,6 @@ class Application:
             print(f"Descrição do Jogo: {descricao}")
         else:
             print("Usuário não encontrado.")
-        
         cursor.execute("SELECT Dir FROM Game WHERE Nome = ?", (nome,))
         resultado3 = cursor.fetchone()
         if resultado3:
@@ -420,11 +419,13 @@ class Application:
 
         #Cria os botões de dowload e salvar
         botao = Button(self.frame2, text="download",command=lambda:extrair(Dir,"saida/"+nome))
-        botao_save = Button(self.frame2, text="Salvar na biblioteca", command=self.savegame)
+        botao_save = Button(self.frame2, text="Salvar na biblioteca", command=lambda: self.savegame(nome))
         botao.place(x=520,y=400)
         botao_save.place(x= 600, y=400)
     
-    def savegame():
+    def savegame(self,nome):
+        mygames = Criar_Banco("mygames","mygames")
+        mygames.insert_table([nome,"daniel"])
         messagebox.showinfo("Sucesso", "Jogo está salvo na sua biblioteca!")
      
 def inicializar():
