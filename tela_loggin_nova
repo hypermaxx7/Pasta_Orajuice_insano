@@ -1,0 +1,105 @@
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
+
+def exibir_tela_login():
+    for widget in root.winfo_children():
+        widget.destroy()
+    
+    frame = ttk.Frame(root, padding="20")
+    frame.pack(fill="both", expand=True)
+
+    titulo = ttk.Label(frame, text="Login", font=("Calibri", 20))
+    titulo.pack(pady=10)
+
+    usuario_label = ttk.Label(frame, text="Usuário:")
+    usuario_label.pack(pady=5)
+    usuario_entry = ttk.Entry(frame, width=30)
+    usuario_entry.pack()
+
+    senha_label = ttk.Label(frame, text="Senha:")
+    senha_label.pack(pady=5)
+    senha_entry = ttk.Entry(frame, width=30, show="*")
+    senha_entry.pack()
+
+    def acao_login():
+        usuario = usuario_entry.get()
+        senha = senha_entry.get()
+        if usuario == "admin" and senha == "1234":
+            exibir_tela_principal()
+        else:
+            messagebox.showerror("Falha no Login", "Credenciais inválidas!")
+
+    botao_login = ttk.Button(frame, text="Entrar", command=acao_login)
+    botao_login.pack(pady=10)
+
+    botao_registrar = ttk.Button(frame, text="Registrar", command=exibir_tela_registro)
+    botao_registrar.pack()
+
+def exibir_tela_registro():
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    frame = ttk.Frame(root, padding="20")
+    frame.pack(fill="both", expand=True)
+
+    titulo = ttk.Label(frame, text="Registrar", font=("Calibri", 20))
+    titulo.pack(pady=10)
+
+    usuario_label = ttk.Label(frame, text="Usuário:")
+    usuario_label.pack(pady=5)
+    usuario_entry = ttk.Entry(frame, width=30)
+    usuario_entry.pack()
+
+    senha_label = ttk.Label(frame, text="Senha:")
+    senha_label.pack(pady=5)
+    senha_entry = ttk.Entry(frame, width=30, show="*")
+    senha_entry.pack()
+
+    confirmar_senha_label = ttk.Label(frame, text="Confirmar Senha:")
+    confirmar_senha_label.pack(pady=5)
+    confirmar_senha_entry = ttk.Entry(frame, width=30, show="*")
+    confirmar_senha_entry.pack()
+
+    def acao_registro():
+        usuario = usuario_entry.get()
+        senha = senha_entry.get()
+        confirmar_senha = confirmar_senha_entry.get()
+        if senha == confirmar_senha:
+            messagebox.showinfo("Registro Bem-Sucedido", f"Usuário {usuario} registrado com sucesso!")
+            exibir_tela_login()
+        else:
+            messagebox.showerror("Falha no Registro", "As senhas não coincidem!")
+
+    botao_registrar = ttk.Button(frame, text="Registrar", command=acao_registro)
+    botao_registrar.pack(pady=10)
+
+    botao_voltar = ttk.Button(frame, text="Voltar", command=exibir_tela_login)
+    botao_voltar.pack()
+
+def exibir_tela_principal():
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    frame = ttk.Frame(root, padding="20")
+    frame.pack(fill="both", expand=True)
+
+    titulo = ttk.Label(frame, text="Bem-vindo!", font=("Calibri", 20))
+    titulo.pack(pady=10)
+
+    botao_sair = ttk.Button(frame, text="Sair", command=exibir_tela_login)
+    botao_sair.pack(pady=10)
+
+root = tk.Tk()
+root.title("Interface Moderna com Tkinter")
+root.geometry("400x300")
+root.resizable(False, False)
+
+# Aplicar estilos modernos
+style = ttk.Style()
+style.theme_use("clam")
+style.configure("TButton", font=("Calibri", 12), padding=5)
+style.configure("TLabel", font=("Calibri", 12))
+
+exibir_tela_login()
+root.mainloop()
